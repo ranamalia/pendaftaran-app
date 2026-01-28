@@ -68,7 +68,7 @@
     </svg>
 
     <!-- Desktop: Cards 5 kolom -->
-    <div class="flow-grid flow-grid-desktop">
+    <div class="flow-grid-desktop">
       <div class="flow-item">
         <div class="flow-title">Daftar Akun</div>
         <div class="flow-text">Pilih tipe SMK/Mahasiswa lalu buat akun.</div>
@@ -93,7 +93,6 @@
 
     <!-- Mobile: Node sejajar dengan card -->
     <div class="flow-mobile">
-
       <div class="flow-row">
         <div class="flow-node">
           <div class="dot">1</div>
@@ -147,11 +146,9 @@
           <div class="flow-text">Lihat status: menunggu/diterima/ditolak.</div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
-
 
   <!-- PERSYARATAN PENDAFTARAN -->
   <section class="section section-light">
