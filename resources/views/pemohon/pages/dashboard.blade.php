@@ -41,9 +41,10 @@
                     @endif
                 </p>
             </div>
+
             <div class="hero2-right">
-            <img class="hero2-img" src="{{ asset('images/hero-dashboard.png') }}" alt="Hero Dashboard">
-        </div>
+                <img class="hero2-img" src="{{ asset('images/hero-dashboard.png') }}" alt="Hero Dashboard">
+            </div>
         </div>
     </div>
 
@@ -74,7 +75,7 @@
                         </div>
                     </div>
 
-                    @if($last->status === 'ditolak' && $last->alasan_penolakan)
+                    @if($last->status === ApplicationStatus::DITOLAK->value && $last->alasan_penolakan)
                         <div class="alert alert-error" style="margin-top: 12px;">
                             <strong>Alasan Penolakan:</strong><br>
                             {{ $last->alasan_penolakan }}
@@ -83,23 +84,28 @@
 
                     <div class="actions">
                         <a href="{{ route('pemohon.usulan.index') }}" class="btn-primary2">Lihat Detail</a>
-                        @if($last->status !== 'diterima')
+
+                        {{-- tombol ajukan lagi hanya kalau boleh ajukan --}}
+                        @if(in_array($last->status, [ApplicationStatus::DITOLAK->value, ApplicationStatus::SELESAI->value], true))
                             <a href="{{ route('pemohon.usulan.index') }}" class="btn-outline2">Ajukan Lagi</a>
                         @endif
                     </div>
                 @endif
             </div>
 
-            <!-- Quick Stats -->
+            <!-- Informasi Akun -->
             <div class="card2">
                 <h2>Informasi Akun</h2>
+
                 <ul class="info-list">
                     <li><b>Email:</b> {{ $user->email }}</li>
-                    <li><b>Tipe:</b> {{ ucfirst($user->tipe) }}</li>
+                    <li><b>Tipe:</b> {{ ucfirst($user->pemohon_tipe) }}</li>
                     <li><b>Akun Dibuat:</b> {{ $user->created_at->format('d M Y') }}</li>
                 </ul>
+
                 <div class="actions" style="margin-top: 14px;">
                     <a href="{{ route('pemohon.profile') }}" class="btn-outline2">Edit Profil</a>
+                </div>
             </div>
         </div>
     </div>

@@ -37,7 +37,7 @@ class UsulanMagangController extends Controller
 
         $opds = Opd::where('aktif', true)->orderBy('nama')->get();
 
-        return view('pemohon.pages.usulan-index', compact('last', 'bolehAjukan', 'opds'));
+        return view('pemohon.pages.usulan-index', compact('last', 'bolehAjukan', 'opds', 'user'));
     }
 
     public function store(Request $request)
@@ -72,10 +72,14 @@ class UsulanMagangController extends Controller
         ]);
 
         return DB::transaction(function () use ($user, $request, $validated) {
+            $kategori = $user->tipe; // asumsi nilainya 'mahasiswa' atau 'smk'
+                if (!in_array($kategori, ['mahasiswa', 'smk'], true)) {
+                    return back()->with('error', 'Tipe akun tidak valid. Silakan update profil dulu.');}
+
             $app = Application::create([
                 'user_id' => $user->id,
                 'opd_id' => $validated['opd_id'],
-                'kategori' => $validated['kategori'],
+                'kategori' => $kategori,
                 'institusi' => $validated['institusi'],
                 'jurusan' => $validated['jurusan'] ?? null,
                 'telepon' => $validated['telepon'] ?? null,
@@ -85,7 +89,6 @@ class UsulanMagangController extends Controller
             ]);
 
             $saveRequiredFile = function (string $inputName, ApplicationFileType $type) use ($request, $app) {
-                // karena required, pasti ada file
                 $file = $request->file($inputName);
 
                 // unique(application_id, type) => kalau ada, replace

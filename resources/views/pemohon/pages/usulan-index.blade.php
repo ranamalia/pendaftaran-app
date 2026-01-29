@@ -143,11 +143,7 @@
         @endif
 
         @if($bolehAjukan)
-            <form method="POST"
-                  action="{{ route('pemohon.usulan.store') }}"
-                  enctype="multipart/form-data"
-                  class="form2">
-                @csrf
+            <form method="POST" action="{{ route('pemohon.usulan.store') }}" enctype="multipart/form-data" class="form2">
 
                 <div class="form2-section">
                     <h3 class="form2-section-title">Informasi OPD & Kategori</h3>
@@ -165,22 +161,21 @@
                         @error('opd_id') <small class="form2-error">{{ $message }}</small> @enderror
                     </div>
 
-                    <div class="form2-grid">
-                        <div class="form2-row">
-                            <label class="form2-label">Kategori <span class="required">*</span></label>
-                            <select name="kategori" class="form2-input" required>
-                                <option value="">-- Pilih --</option>
-                                <option value="mahasiswa" @selected(old('kategori')=='mahasiswa')>Mahasiswa</option>
-                                <option value="smk" @selected(old('kategori')=='smk')>SMK</option>
-                            </select>
-                            @error('kategori') <small class="form2-error">{{ $message }}</small> @enderror
-                        </div>
+                    <div class="form2-row">
+                        <label class="form2-label">Kategori</label>
+                        <input type="text"
+                            class="form2-input"
+                            value="{{ strtoupper($user->pemohon_tipe) }}"
+                            readonly>
+                        <small class="muted">
+                            Kategori mengikuti tipe akun di profil. Jika salah, silakan update profil.
+                        </small>
+                    </div>
 
-                        <div class="form2-row">
-                            <label class="form2-label">Institusi <span class="required">*</span></label>
-                            <input type="text" name="institusi" value="{{ old('institusi') }}" class="form2-input" placeholder="Nama kampus/sekolah" required>
-                            @error('institusi') <small class="form2-error">{{ $message }}</small> @enderror
-                        </div>
+                    <div class="form2-row">
+                        <label class="form2-label">Institusi <span class="required">*</span></label>
+                        <input type="text" name="institusi" value="{{ old('institusi') }}" class="form2-input" placeholder="Nama kampus/sekolah" required>
+                        @error('institusi') <small class="form2-error">{{ $message }}</small> @enderror
                     </div>
                 </div>
 
