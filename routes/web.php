@@ -1,7 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Pemohon\ApplicationFileController;
 
 Route::get('/', function () {
-    return view('welcome');
+    // kalau sudah login, langsung ke dashboard pemohon
+    if (Auth::check()) {
+        return redirect()->route('pemohon.dashboard');
+    }
+
+    // kalau belum login, ke landing pemohon
+    return redirect()->route('pemohon.home');
 });
+
+require __DIR__.'/pemohon.php';

@@ -24,6 +24,13 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'role',
+        'pemohon_tipe',
+        'instansi_nama',
+        'jurusan',
+        'nomor_induk',
+        'no_hp',
+        'alamat',
     ];
 
     /**
@@ -55,5 +62,10 @@ class User extends Authenticatable implements FilamentUser
         return $panel->getId() === 'admin'
             ? (bool) $this->is_admin
             : true;
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(\App\Models\Application::class);
     }
 }
