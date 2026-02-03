@@ -155,7 +155,8 @@
 
         @if($bolehAjukan)
             <form method="POST" action="{{ route('pemohon.usulan.store') }}" enctype="multipart/form-data" class="form2">
-
+                @csrf
+                
                 <div class="form2-section">
                     <h3 class="form2-section-title">Informasi OPD & Kategori</h3>
 
