@@ -57,7 +57,6 @@ class UsulanMagangController extends Controller
 
         $validated = $request->validate([
             'opd_id' => ['required', 'exists:opds,id'],
-            'kategori' => ['required', 'in:mahasiswa,smk'],
             'institusi' => ['required', 'string', 'max:255'],
             'jurusan' => ['nullable', 'string', 'max:255'],
             'telepon' => ['nullable', 'string', 'max:30'],
@@ -72,9 +71,10 @@ class UsulanMagangController extends Controller
         ]);
 
         return DB::transaction(function () use ($user, $request, $validated) {
-            $kategori = $user->tipe; // asumsi nilainya 'mahasiswa' atau 'smk'
-                if (!in_array($kategori, ['mahasiswa', 'smk'], true)) {
-                    return back()->with('error', 'Tipe akun tidak valid. Silakan update profil dulu.');}
+            // derive kategori from user's profile field 'pemohon_tipe'
+            $kategori = $user->pemohon_tipe; // nilai: 'mahasiswa' atau 'smk'
+            if (!in_array($kategori, ['mahasiswa', 'smk'], true)) {
+                return back()->with('error', 'Tipe akun tidak valid. Silakan update profil dulu.');}
 
             $app = Application::create([
                 'user_id' => $user->id,

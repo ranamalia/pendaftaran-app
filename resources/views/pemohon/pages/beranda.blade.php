@@ -15,7 +15,6 @@
       </div>
 
       <div class="hero2-right">
-        <!-- GANTI GAMBAR INI SESUAI PUNYA KAMU -->
         <img class="hero2-img" src="{{ asset('images/hero-dashboard.png') }}" alt="Hero Dashboard">
       </div>
     </div>
