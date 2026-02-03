@@ -186,5 +186,45 @@
     </div>
   </section>
 
+  <footer class="footer2">
+    <div class="footer2-inner">
+
+        <!-- Branding -->
+        <div class="footer2-col">
+            <h3 class="footer2-title">Portal Magang</h3>
+            <p class="footer2-desc">
+                Platform resmi pendaftaran magang Pemerintah Kabupaten Sragen.
+                Memudahkan mahasiswa dan pelajar untuk mengajukan permohonan magang secara online.
+            </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer2-col">
+            <h4 class="footer2-heading">Menu</h4>
+            <ul class="footer2-links">
+                <li><a href="{{ route('pemohon.home') }}">Beranda</a></li>
+                <li><a href="{{ route('pemohon.login') }}">Masuk</a></li>
+                <li><a href="{{ route('pemohon.register') }}">Daftar</a></li>
+            </ul>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer2-col">
+            <h4 class="footer2-heading">Kontak</h4>
+            <ul class="footer2-contact">
+                <li>📍 Sragen, Jawa Tengah</li>
+                <li>📧 magang@sragen.go.id</li>
+                <li>☎ (0271) 123456</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer2-bottom">
+        <p>
+            © {{ date('Y') }} Portal Magang Kabupaten Sragen. All rights reserved.
+        </p>
+    </div>
+</footer>
+
 </body>
 </html>

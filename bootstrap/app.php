@@ -14,7 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'pemohon' => \App\Http\Middleware\EnsurePemohon::class,
         ]);
+        $middleware->redirectGuestsTo(fn () => route('pemohon.login'));
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();

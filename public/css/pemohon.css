@@ -85,7 +85,7 @@ label {
   border-radius: 8px;
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
-  color: #162D50;
+  color: rgb(22, 45, 80);
   transition: all 0.3s ease;
 }
 
@@ -520,27 +520,27 @@ textarea.input {
 /* CTA Section */
 .cta {
   background: #162D50;
-  padding: 48px 20px;
+  padding: 24px 20px;
 }
 
 .cta-inner {
-  max-width: 900px;
+  max-width: 700px;
   margin: 0 auto;
   text-align: center;
   color: #FFFFFF;
 }
 
 .cta-inner h2 {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-size: 24px;
   font-weight: 700;
 }
 
 .cta-inner p {
   opacity: 0.9;
-  font-size: 13px;
-  margin-bottom: 18px;
-  line-height: 1.6;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.3;
 }
 
 /* ===== APP (AFTER LOGIN LAYOUT) ===== */
@@ -1331,3 +1331,77 @@ textarea.input {
 .pill-error { background-color: #ef4444; color: white; }
 .pill-warning { background-color: #f59e0b; color: white; }
 .pill-info { background-color: #3b82f6; color: white; }
+
+.footer2 {
+    background: #FF6600;
+    color: #fff;
+    margin-top: 80px;
+    padding: 50px 20px 20px;
+}
+
+.footer2-inner {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+}
+
+.footer2-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.footer2-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+.footer2-heading {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.footer2-links,
+.footer2-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer2-links li,
+.footer2-contact li {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.footer2-links a {
+    color: #162d50;
+    text-decoration: none;
+    opacity: 0.85;
+}
+
+.footer2-links a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.footer2-bottom {
+    border-top: 1px solid rgba(255,255,255,0.15);
+    margin-top: 30px;
+    padding-top: 15px;
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.75;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer2-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}

@@ -63,7 +63,7 @@
               <option value="smk" @selected(old('pemohon_tipe', $user->pemohon_tipe)==='smk')>SMK</option>
               <option value="mahasiswa" @selected(old('pemohon_tipe', $user->pemohon_tipe)==='mahasiswa')>Mahasiswa</option>
             </select>
-            <small class="form2-help">Pilih sesuai status Anda saat magang</small>
+            <small class="form2-help">Pilih sesuai status Anda saat ini</small>
             @error('pemohon_tipe') <small class="form2-error">{{ $message }}</small> @enderror
           </div>
         </div>
