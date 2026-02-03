@@ -60,6 +60,8 @@
       <div style="margin-top: 24px; text-align: center; font-size: 13px; color: #64748b;">
         Belum punya akun?
         <a href="{{ route('pemohon.register') }}" class="link">Daftar di sini</a>
+        <br>
+         <!--<a href="{{ route('pemohon.password.request') }}" class="link" style="margin-top:8px; display:inline-block;">Lupa password?</a>-->
       </div>
     </div>
   </div>
