@@ -2,130 +2,131 @@
 
 namespace App\Filament\Resources\Applications\Schemas;
 
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Storage;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\RepeatableEntry;
 use Illuminate\Support\HtmlString;
-use Filament\Infolists\Components\Grid;
-use Filament\Infolists\Components\Section;
-use Filament\Infolists\Components\ViewEntry;
-
+use App\Enums\ApplicationFileType;
 
 class ApplicationInfolist
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextEntry::make('user.name')
-                    ->label('Nama Pemohon'),
+        return $schema->components([
+            // INFORMASI PEMOHON
+            Section::make('Informasi Pemohon')
+                ->icon('heroicon-o-user')
+                ->schema([
+                    Grid::make(2)->schema([
+                        TextEntry::make('user.name')->label('Nama Lengkap'),
+                        TextEntry::make('user.email')->label('Email'),
+                        TextEntry::make('telepon')->label('Nomor Telepon')->placeholder('-'),
+                        TextEntry::make('kategori')
+                            ->label('Kategori')
+                            ->badge()
+                            ->formatStateUsing(fn (?string $state) => ucfirst($state)),
+                        TextEntry::make('institusi')->label('Institusi'),
+                        TextEntry::make('jurusan')->label('Jurusan / Program Studi')->placeholder('-'),
+                    ]),
+                ]),
 
-                TextEntry::make('user.email')
-                    ->label('Email'),
+            // OPD & JADWAL
+            Section::make('OPD Tujuan & Jadwal')
+                ->icon('heroicon-o-building-office')
+                ->schema([
+                    Grid::make(2)->schema([
+                        TextEntry::make('opd.nama')->label('OPD Tujuan'),
+                        TextEntry::make('tanggal_mulai')->label('Tanggal Mulai')->date('d F Y'),
+                        TextEntry::make('tanggal_selesai')->label('Tanggal Selesai')->date('d F Y'),
+                    ]),
+                ]),
 
-                TextEntry::make('opd.nama')
-                    ->label('OPD Tujuan'),
+            // DOKUMEN (TABEL)
+    //         Section::make('Dokumen')
+    // ->icon('heroicon-o-archive-box-arrow-down')
+    // ->schema([
+    //     // HEADER (SATU KALI)
+    //     Grid::make(4)->schema([
+    //         TextEntry::make('header_doc')->label('Nama Dokumen')->state(''),
+    //         TextEntry::make('header_by')->label('Diupload Oleh')->state(''),
+    //         TextEntry::make('header_date')->label('Tanggal Upload')->state(''),
+    //         TextEntry::make('header_action')->label('Aksi')->state(''),
+    //     ]),
 
-                TextEntry::make('kategori')
-                    ->label('Kategori')
-                    ->formatStateUsing(fn (?string $state) => match ($state) {
-                        'mahasiswa' => 'Mahasiswa',
-                        'smk' => 'SMK',
-                        default => $state,
-                    }),
+        // LIST DOKUMEN
+    //     RepeatableEntry::make('files')
+    //         ->label('') // <-- hilangkan tulisan "Files"
+    //         ->visible(fn ($record) => $record->files->isNotEmpty())
+    //         ->schema([
+    //             Grid::make(4)->schema([
+    //                 TextEntry::make('type')
+    //                     ->label('') // <-- jangan muncul "Type"
+    //                     ->formatStateUsing(function ($state) {
+    //                         $value = $state instanceof ApplicationFileType ? $state->value : (string) $state;
 
-                TextEntry::make('institusi')
-                    ->label('Institusi / Sekolah'),
+    //                         return match ($value) {
+    //                             ApplicationFileType::SURAT_PENGANTAR->value => 'Surat Pengantar Kampus',
+    //                             ApplicationFileType::PROPOSAL->value => 'Proposal Magang',
+    //                             ApplicationFileType::CV->value => 'CV',
+    //                             ApplicationFileType::TRANSKRIP_RAPOR->value => 'Transkrip / Rapor',
+    //                             ApplicationFileType::SURAT_JAWABAN_IZIN->value => 'Surat Jawaban / Izin Magang',
+    //                             ApplicationFileType::SURAT_KETERANGAN_SELESAI->value => 'Surat Keterangan Selesai',
+    //                             default => $value,
+    //                         };
+    //                     }),
 
-                TextEntry::make('jurusan')
-                    ->label('Jurusan')
-                    ->placeholder('-'),
+    //                 TextEntry::make('uploaded_by')
+    //                     ->label('') // <-- jangan muncul "Uploaded by"
+    //                     ->placeholder('-'),
 
-                TextEntry::make('telepon')
-                    ->label('Telepon')
-                    ->placeholder('-'),
+    //                 TextEntry::make('created_at')
+    //                     ->label('') // <-- jangan muncul "Created at"
+    //                     ->date('d M Y'),
 
-                TextEntry::make('tanggal_mulai')
-                    ->label('Tanggal Mulai')
-                    ->date('d M Y'),
+    //                 TextEntry::make('path')
+    //                     ->label('') // <-- jangan muncul "Path"
+    //                     ->formatStateUsing(fn ($state) => new HtmlString(
+    //                         '<a href="' . asset('storage/' . ltrim((string) $state, '/')) . '" target="_blank" class="underline text-primary-600">Unduh</a>'
+    //                     ))
+    //                     ->html(),
+    //             ]),
+    //         ]),
 
-                TextEntry::make('tanggal_selesai')
-                    ->label('Tanggal Selesai')
-                    ->date('d M Y'),
-
-                TextEntry::make('status')
-                    ->label('Status')
-                    ->formatStateUsing(fn (?string $state) => match ($state) {
-                        'diproses' => 'Diproses',
-                        'disetujui' => 'Disetujui',
-                        'ditolak' => 'Ditolak',
-                        'selesai' => 'Selesai',
-                        default => $state,
-                    }),
-
-                // Download Surat Jawaban (Filament v4: pakai HtmlString + ->html())
-                TextEntry::make('surat_jawaban_link')
-                    ->label('Surat Jawaban')
-                    ->state(function ($record) {
-                        $file = $record->fileByType(\App\Enums\ApplicationFileType::SURAT_JAWABAN_IZIN->value);
-
-                        if (! $file?->path) {
-                            return '-';
-                        }
-
-                        // $url = Storage::disk('public')->url($file->path);
-                        $url = asset('storage/' . ltrim($file->path, '/'));
-
-
-                        return new HtmlString(
-                            '<a href="'.$url.'" target="_blank" rel="noopener" class="underline">
-                                Download Surat Jawaban
-                            </a>'
-                        );
-                    })
-                    ->html(),
-
-                // Download Surat Selesai (Filament v4: tanpa ->url())
-                TextEntry::make('surat_selesai_link')
-                    ->label('Surat Selesai')
-                    ->state(function ($record) {
-                        $file = $record->fileByType(\App\Enums\ApplicationFileType::SURAT_SELESAI->value);
-
-                        if (! $file?->path) {
-                            return '-';
-                        }
-
-                        // $url = Storage::disk('public')->url($file->path);
-                        $url = asset('storage/' . ltrim($file->path, '/'));
+    //     // JIKA TIDAK ADA DOKUMEN
+    //     TextEntry::make('no_files')
+    //         ->visible(fn ($record) => $record->files->isEmpty())
+    //         ->label(false)
+    //         ->state('Belum ada dokumen yang diunggah.'),
+    // ]),
 
 
-                        return new HtmlString(
-                            '<a href="'.$url.'" target="_blank" rel="noopener" class="underline">
-                                Download Surat Selesai
-                            </a>'
-                        );
-                    })
-                    ->html(),
+            // STATUS & TANGGAL
+            Section::make('Status & Catatan')
+                ->icon('heroicon-o-clipboard-document-check')
+                ->schema([
+                    Grid::make(2)->schema([
+                        TextEntry::make('status')
+                            ->label('Status')
+                            ->badge()
+                            ->color(fn ($state) => match ($state) {
+                                'diproses' => 'gray',
+                                'disetujui' => 'primary',
+                                'ditolak' => 'danger',
+                                'selesai' => 'success',
+                                default => 'gray',
+                            })
+                            ->formatStateUsing(fn ($state) => ucfirst($state)),
 
-                TextEntry::make('alasan_penolakan')
-                    ->label('Alasan Penolakan')
-                    ->placeholder('-'),
+                        TextEntry::make('created_at')->label('Diajukan')->dateTime('d M Y H:i'),
+                        TextEntry::make('updated_at')->label('Terakhir Diubah')->dateTime('d M Y H:i'),
 
-                TextEntry::make('catatan_persetujuan')
-                    ->label('Catatan Persetujuan')
-                    ->placeholder('-'),
-
-                TextEntry::make('catatan_admin')
-                    ->label('Catatan Admin')
-                    ->placeholder('-'),
-
-                TextEntry::make('created_at')
-                    ->label('Diajukan')
-                    ->dateTime('d M Y H:i'),
-
-                TextEntry::make('updated_at')
-                    ->label('Terakhir diubah')
-                    ->dateTime('d M Y H:i'),
-            ]);
+                        TextEntry::make('alasan_penolakan')->label('Alasan Penolakan')->placeholder('-'),
+                        TextEntry::make('catatan_persetujuan')->label('Catatan Persetujuan')->placeholder('-'),
+                        TextEntry::make('catatan_admin')->label('Catatan Admin')->placeholder('-'),
+                    ]),
+                ]),
+        ]);
     }
 }
