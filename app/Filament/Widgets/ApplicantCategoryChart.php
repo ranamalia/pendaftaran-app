@@ -13,6 +13,16 @@ class ApplicantCategoryChart extends ChartWidget
     protected int|string|array $columnSpan = 1;
     protected ?string $maxHeight = '220px';
 
+    public function mount(): void
+    {
+        parent::mount();
+
+        $data = $this->getData();
+        $total = array_sum($data['datasets'][0]['data'] ?? []);
+        $this->heading = "Kategori Pemohon";
+        $this->description = "Total: {$total}";
+    }
+
     protected function getFilters(): ?array
     {
         return Opd::query()
@@ -35,24 +45,24 @@ class ApplicantCategoryChart extends ChartWidget
             SUM(CASE WHEN kategori = 'smk' THEN 1 ELSE 0 END) AS smk
         ")->first();
 
+        $mahasiswa = (int) ($row->mahasiswa ?? 0);
+        $smk = (int) ($row->smk ?? 0);
+
+        // update heading setiap kali data dihitung
+        $this->heading = "Kategori Pemohon ";
+        $this->description = "(Total: " . ($mahasiswa + $smk) . ")";
+
         return [
             'datasets' => [
                 [
                     'label' => 'Jumlah',
-                    'data' => [
-                        (int) ($row->mahasiswa ?? 0),
-                        (int) ($row->smk ?? 0),
-                    ],
-                    'backgroundColor' => [
-                        '#3B82F6',
-                        '#F59E0B',
-                    ],
+                    'data' => [$mahasiswa, $smk],
+                    'backgroundColor' => ['#3B82F6', '#F59E0B'],
                     'borderWidth' => 0,
                 ],
             ],
             'labels' => ['Mahasiswa', 'PKL SMK'],
         ];
-
     }
 
     protected function getType(): string
@@ -72,9 +82,8 @@ class ApplicantCategoryChart extends ChartWidget
                     ],
                 ],
             ],
-            'cutout' => '65%',
-            'hoverOffset' => 8,
+            'cutout' => '68%',
+            'hoverOffset' => 10,
         ];
     }
-
 }
