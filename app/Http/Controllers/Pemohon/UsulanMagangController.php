@@ -18,11 +18,15 @@ class UsulanMagangController extends Controller
         // Aturan: boleh ajukan jika belum ada usulan, atau terakhir DITOLAK/SELESAI
         if (!$last) return true;
 
-        return in_array($last->status, [
+        $status = is_object($last->status)
+            ? $last->status->value
+            : $last->status;
+
+        return in_array($status, [
             ApplicationStatus::DITOLAK->value,
             ApplicationStatus::SELESAI->value,
         ], true);
-    }
+            }
 
     public function index(Request $request)
     {
@@ -30,7 +34,7 @@ class UsulanMagangController extends Controller
 
         $last = $user->applications()
             ->latest('created_at')
-            ->with(['opd', 'files']) // penting untuk tampil link file
+            ->with(['opd', 'files'])
             ->first();
 
         $bolehAjukan = $this->bolehAjukan($last);
@@ -105,7 +109,6 @@ class UsulanMagangController extends Controller
                     ]
                 );
 
-                // hapus file lama biar storage gak numpuk
                 if ($old && $old->path && $old->path !== $path) {
                     Storage::disk('public')->delete($old->path);
                 }

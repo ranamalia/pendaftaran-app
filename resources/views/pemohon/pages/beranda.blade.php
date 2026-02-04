@@ -82,7 +82,7 @@
         <h2>Informasi Penting</h2>
         <ul class="info-list">
           <li>Pengajuan magang diproses setelah data & berkas lengkap.</li>
-          <li>Selama status <b>Menunggu/Diterima</b>, Anda tidak dapat membuat usulan baru.</li>
+          <li>Selama status <b>Diproses</b> atau <b>Diterima</b>, Anda tidak dapat membuat usulan baru.</li>
           <li>Jika <b>Ditolak</b> atau <b>Selesai</b>, Anda dapat mengajukan kembali.</li>
         </ul>
       </div>
