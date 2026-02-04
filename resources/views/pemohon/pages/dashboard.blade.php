@@ -85,7 +85,7 @@
                     <div class="actions">
                         <a href="{{ route('pemohon.usulan.index') }}" class="btn-primary2">Lihat Detail</a>
 
-                        @if(in_array($last->status, [ApplicationStatus::DISETUJUI->value, ApplicationStatus::DITOLAK->value, ApplicationStatus::SELESAI->value], true))
+                        @if(in_array($last->status, [ApplicationStatus::DITOLAK->value, ApplicationStatus::SELESAI->value], true))
                             <a href="{{ route('pemohon.usulan.index') }}" class="btn-outline2">Ajukan Lagi</a>
                         @endif
                     </div>
