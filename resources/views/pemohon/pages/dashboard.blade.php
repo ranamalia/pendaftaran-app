@@ -97,7 +97,7 @@
 
                 <ul class="info-list">
                     <li><b>Email:</b> {{ $user->email }}</li>
-                    <li><b>Tipe:</b> {{ ucfirst($user->pemohon_tipe) }}</li>
+                    <li><b>Kategori:</b> {{ ucfirst($user->pemohon_tipe) }}</li>
                     <li><b>Akun Dibuat:</b> {{ $user->created_at->format('d M Y') }}</li>
                 </ul>
 
