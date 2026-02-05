@@ -67,6 +67,13 @@ class ApplicationsTable
                         ApplicationStatus::SELESAI->value => 'Selesai',
                         default => $state,
                     })
+                    ->color(fn (?string $state) => match ($state) {
+                        ApplicationStatus::DIPROSES->value => 'warning', // kuning
+                        ApplicationStatus::DISETUJUI->value => 'success', // hijau
+                        ApplicationStatus::DITOLAK->value => 'danger', // merah
+                        ApplicationStatus::SELESAI->value => 'primary', // biru
+                        default => 'gray',
+                    })
                     ->sortable(),
 
                 TextColumn::make('surat_jawaban')
@@ -127,7 +134,7 @@ class ApplicationsTable
                 SelectFilter::make('opd_id')
                     ->label('OPD')
                     ->relationship('opd', 'nama'),
-                    
+
             ])
 
             ->recordActions([

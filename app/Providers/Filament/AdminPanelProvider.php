@@ -26,6 +26,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->maxContentWidth('full')
+            ->globalSearch(false)
             ->sidebarCollapsibleOnDesktop()
             ->id('admin')
             ->path('admin')
