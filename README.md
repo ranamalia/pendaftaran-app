@@ -148,9 +148,8 @@ http://127.0.0.1:8000
 ## 👩‍💻 Developer
 
 Dikembangkan oleh:
-**Rizky Amalia Nugrahaeni**
-**Syifa Nur Aini**
-
+- **Rizky Amalia Nugrahaeni**
+- **Syifa Nur Aini**
 ---
 
 ## 📜 Lisensi
