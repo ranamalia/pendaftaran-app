@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ApplicationFileDownloadController;
 
 Route::get('/', function () {
     // kalau sudah login, langsung ke dashboard pemohon
@@ -21,3 +22,12 @@ Route::get('/reset-password/{token}', function (string $token) {
 })->name('password.reset');
 
 require __DIR__.'/pemohon.php';
+
+
+
+Route::get(
+    '/admin/application-files/{file}/download',
+    [ApplicationFileDownloadController::class, 'download']
+)->name('admin.application-files.download')->middleware('auth');
+
+

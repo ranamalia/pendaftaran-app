@@ -8,6 +8,8 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Route;
+
 
 class FilesRelationManager extends RelationManager
 {
@@ -51,10 +53,11 @@ class FilesRelationManager extends RelationManager
                 TextColumn::make('aksi')
                     ->label('Aksi')
                     ->state(function ($record) {
-                        $url = Storage::url($record->path);
+                        // ini route yang akan memaksa nama download jadi rapi
+                        $url = route('admin.application-files.download', $record);
 
                         return new HtmlString(
-                            '<a href="' . e($url) . '" target="_blank"
+                            '<a href="' . e($url) . '"
                                 class="inline-flex items-center gap-1 rounded-md border px-3 py-1 text-sm font-medium hover:bg-gray-50">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -62,13 +65,14 @@ class FilesRelationManager extends RelationManager
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
-                                Lihat
+                                Unduh
                             </a>'
                         );
                     })
                     ->html()
                     ->alignCenter()
                     ->extraAttributes(['class' => 'w-[15%] whitespace-nowrap']),
+
             ])
             ->defaultSort('created_at', 'desc')
             ->headerActions([])
