@@ -11,6 +11,12 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use App\Enums\ApplicationFileType;
 use App\Enums\ApplicationStatus;
+use App\Services\ApplicationFileService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Illuminate\Support\Str;
+
 
 
 class ViewApplication extends ViewRecord
@@ -20,7 +26,7 @@ class ViewApplication extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            // SETUJUI
+            // setujui
             Action::make('setujui')
                 ->label('Setujui')
                 ->color('success')
@@ -31,7 +37,7 @@ class ViewApplication extends ViewRecord
 
                 ->action(function (): void {
                     $this->record->update([
-                        'status' => 'disetujui',
+                        'status' => ApplicationStatus::DISETUJUI->value,
                         'alasan_penolakan' => null,
                     ]);
 
@@ -41,7 +47,7 @@ class ViewApplication extends ViewRecord
                         ->send();
                 }),
 
-            // TOLAK
+            // tolak
             Action::make('tolak')
                 ->label('Tolak')
                 ->color('danger')
@@ -57,7 +63,7 @@ class ViewApplication extends ViewRecord
                 ])
                 ->action(function (array $data): void {
                     $this->record->update([
-                        'status' => 'ditolak',
+                        'status' => ApplicationStatus::DITOLAK->value,
                         'alasan_penolakan' => $data['alasan_penolakan'],
                     ]);
 
@@ -71,28 +77,43 @@ class ViewApplication extends ViewRecord
             Action::make('uploadSuratJawaban')
                 ->label('Upload Surat Jawaban')
                 ->icon('heroicon-o-arrow-up-tray')
-                ->visible(fn () => in_array($this->record->status, ['disetujui', 'ditolak'], true))
+                ->visible(fn () => in_array($this->record->status, [
+                    ApplicationStatus::DISETUJUI->value,
+                    ApplicationStatus::DITOLAK->value,
+                ], true))
                 ->schema([
                     FileUpload::make('file')
                         ->label('Surat Jawaban (PDF)')
                         ->required()
                         ->disk('public')
-                        ->directory('applications/surat-jawaban')
+                        ->directory(fn () => "applications/{$this->record->id}")
                         ->acceptedFileTypes(['application/pdf'])
-                        ->maxSize(4096),
+                        ->maxSize(4096)
+                        ->preserveFilenames(false)
+                        ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
+                            $ext = strtolower($file->getClientOriginalExtension() ?: 'pdf');
+
+                            $jenis = ApplicationFileType::SURAT_JAWABAN_IZIN->filenameSlug();
+                            $namaPemohon = Str::slug($this->record->user->name);
+                            $tanggal = now()->format('Ymd');
+
+                            return "{$jenis}_{$namaPemohon}_{$tanggal}.{$ext}";
+                        }),
+
+
                 ])
                 ->action(function (array $data): void {
-                    $path = $data['file'];
+                    $path = $data['file']; //
 
                     ApplicationFile::updateOrCreate(
                         [
                             'application_id' => $this->record->id,
-                            'type' => ApplicationFileType::SURAT_JAWABAN_IZIN->value,
+                            'type' => ApplicationFileType::SURAT_JAWABAN_IZIN,
                         ],
                         [
                             'path' => $path,
                             'original_name' => basename($path),
-                            'uploaded_by' => 'admin',
+                            'uploaded_by' => Auth::user()?->name ?? 'admin',
                         ]
                     );
 
@@ -102,43 +123,59 @@ class ViewApplication extends ViewRecord
                         ->send();
                 }),
 
-            // UPLOAD SURAT SELESAI (muncul saat disetujui/selesai)
+
+            // up surat selesai (muncul saat disetujui/selesai)
             Action::make('uploadSuratSelesai')
                 ->label('Upload Surat Selesai')
                 ->icon('heroicon-o-arrow-up-tray')
-                ->visible(fn () => in_array($this->record->status, ['disetujui', 'selesai'], true))
+                ->visible(fn () => in_array($this->record->status, [
+                    ApplicationStatus::DISETUJUI->value,
+                    ApplicationStatus::SELESAI->value,
+                ], true))
                 ->schema([
                     FileUpload::make('file')
-                        ->label('Surat Selesai (PDF)')
-                        ->required()
-                        ->disk('public')
-                        ->directory('applications/surat-selesai')
-                        ->acceptedFileTypes(['application/pdf'])
-                        ->maxSize(4096),
+                    ->label('Surat Jawaban (PDF)')
+                    ->required()
+                    ->disk('public')
+                    ->directory(fn () => "applications/{$this->record->id}")
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->maxSize(4096)
+                    ->preserveFilenames(false)
+                    ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file): string {
+                        $ext = strtolower($file->getClientOriginalExtension() ?: 'pdf');
+
+                        $jenis = ApplicationFileType::SURAT_KETERANGAN_SELESAI->filenameSlug();
+                        $namaPemohon = Str::slug($this->record->user->name);
+                        $tanggal = now()->format('Ymd');
+
+                        return "{$jenis}_{$namaPemohon}_{$tanggal}.{$ext}";
+                    }),
+
+
                 ])
                 ->action(function (array $data): void {
-                    $path = $data['file'];
+                $path = $data['file'];
 
-                    ApplicationFile::updateOrCreate(
-                        [
-                            'application_id' => $this->record->id,
-                            'type' => ApplicationFileType::SURAT_KETERANGAN_SELESAI->value,
+                ApplicationFile::updateOrCreate(
+                    [
+                        'application_id' => $this->record->id,
+                        'type' => ApplicationFileType::SURAT_KETERANGAN_SELESAI,
+                    ],
+                    [
+                        'path' => $path,
+                        'original_name' => basename($path),
+                        'uploaded_by' => Auth::user()?->name ?? 'admin',
+                    ]
+                );
 
-                        ],
-                        [
-                            'path' => $path,
-                            'original_name' => basename($path),
-                            'uploaded_by' => 'admin',
-                        ]
-                    );
+                Notification::make()
+                    ->title('Surat selesai berhasil diupload')
+                    ->success()
+                    ->send();
+            }),
 
-                    Notification::make()
-                        ->title('Surat selesai berhasil diupload')
-                        ->success()
-                        ->send();
-                }),
 
-            // SELESAI (hanya boleh kalau surat selesai sudah ada)
+            // SELESAI (  kalau surat selesai sudah ada)
             Action::make('selesai')
                 ->label('Tandai Selesai')
                 ->color('primary')

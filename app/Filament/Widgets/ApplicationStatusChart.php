@@ -54,10 +54,10 @@ class ApplicationStatusChart extends ChartWidget
                         (int) ($row->selesai ?? 0),
                     ],
                     'backgroundColor' => [
-                        '#3B82F6', // Diproses - Biru
-                        '#22C55E', // Disetujui - Hijau
-                        '#EF4444', // Ditolak - Merah
-                        '#64748B', // Selesai - Abu gelap
+                        '#3B82F6', // Biru
+                        '#22C55E', // Hijau
+                        '#EF4444', // Merah
+                        '#64748B',
                     ],
                     'borderWidth' => 0,
                 ],

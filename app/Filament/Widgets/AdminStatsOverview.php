@@ -12,7 +12,7 @@ class AdminStatsOverview extends StatsOverviewWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    // Biar 6 card jadi 3 kolom (2 baris) dan rapi
+    
     protected function getColumns(): int
     {
         return 3;

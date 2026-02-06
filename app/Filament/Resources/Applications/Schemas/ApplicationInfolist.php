@@ -15,7 +15,7 @@ class ApplicationInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            // INFORMASI PEMOHON
+            // info pemohon
             Section::make('Informasi Pemohon')
                 ->icon('heroicon-o-user')
                 ->schema([
@@ -32,7 +32,7 @@ class ApplicationInfolist
                     ]),
                 ]),
 
-            // OPD & JADWAL
+            // opd & jadwal
             Section::make('OPD Tujuan & Jadwal')
                 ->icon('heroicon-o-building-office')
                 ->schema([
@@ -43,66 +43,8 @@ class ApplicationInfolist
                     ]),
                 ]),
 
-            // DOKUMEN (TABEL)
-    //         Section::make('Dokumen')
-    // ->icon('heroicon-o-archive-box-arrow-down')
-    // ->schema([
-    //     // HEADER (SATU KALI)
-    //     Grid::make(4)->schema([
-    //         TextEntry::make('header_doc')->label('Nama Dokumen')->state(''),
-    //         TextEntry::make('header_by')->label('Diupload Oleh')->state(''),
-    //         TextEntry::make('header_date')->label('Tanggal Upload')->state(''),
-    //         TextEntry::make('header_action')->label('Aksi')->state(''),
-    //     ]),
 
-        // LIST DOKUMEN
-    //     RepeatableEntry::make('files')
-    //         ->label('') // <-- hilangkan tulisan "Files"
-    //         ->visible(fn ($record) => $record->files->isNotEmpty())
-    //         ->schema([
-    //             Grid::make(4)->schema([
-    //                 TextEntry::make('type')
-    //                     ->label('') // <-- jangan muncul "Type"
-    //                     ->formatStateUsing(function ($state) {
-    //                         $value = $state instanceof ApplicationFileType ? $state->value : (string) $state;
-
-    //                         return match ($value) {
-    //                             ApplicationFileType::SURAT_PENGANTAR->value => 'Surat Pengantar Kampus',
-    //                             ApplicationFileType::PROPOSAL->value => 'Proposal Magang',
-    //                             ApplicationFileType::CV->value => 'CV',
-    //                             ApplicationFileType::TRANSKRIP_RAPOR->value => 'Transkrip / Rapor',
-    //                             ApplicationFileType::SURAT_JAWABAN_IZIN->value => 'Surat Jawaban / Izin Magang',
-    //                             ApplicationFileType::SURAT_KETERANGAN_SELESAI->value => 'Surat Keterangan Selesai',
-    //                             default => $value,
-    //                         };
-    //                     }),
-
-    //                 TextEntry::make('uploaded_by')
-    //                     ->label('') // <-- jangan muncul "Uploaded by"
-    //                     ->placeholder('-'),
-
-    //                 TextEntry::make('created_at')
-    //                     ->label('') // <-- jangan muncul "Created at"
-    //                     ->date('d M Y'),
-
-    //                 TextEntry::make('path')
-    //                     ->label('') // <-- jangan muncul "Path"
-    //                     ->formatStateUsing(fn ($state) => new HtmlString(
-    //                         '<a href="' . asset('storage/' . ltrim((string) $state, '/')) . '" target="_blank" class="underline text-primary-600">Unduh</a>'
-    //                     ))
-    //                     ->html(),
-    //             ]),
-    //         ]),
-
-    //     // JIKA TIDAK ADA DOKUMEN
-    //     TextEntry::make('no_files')
-    //         ->visible(fn ($record) => $record->files->isEmpty())
-    //         ->label(false)
-    //         ->state('Belum ada dokumen yang diunggah.'),
-    // ]),
-
-
-            // STATUS & TANGGAL
+            // Status & tanggal
             Section::make('Status & Catatan')
                 ->icon('heroicon-o-clipboard-document-check')
                 ->schema([
