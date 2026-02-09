@@ -27,7 +27,7 @@ Aplikasi ini ditujukan bagi **siswa SMK dan mahasiswa** sebagai pemohon magang, 
 
 - **Backend**: Laravel 12 (PHP 8.3)
 - **Frontend**: Blade Template
-- **Styling**: CSS manual
+- **Styling**: CSS
 - **Database**: MySQL
 - **Admin Panel**: Filament v4
 - **Environment**: Laragon (disarankan)
@@ -63,7 +63,7 @@ cp .env.example .env
 Atur konfigurasi database di `.env`:
 
 ```
-DB_DATABASE=portal_magang
+DB_DATABASE=pendaftaran-app
 DB_USERNAME=root
 DB_PASSWORD=
 ```
